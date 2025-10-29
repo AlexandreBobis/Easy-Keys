@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Keys</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Caractères accentués</h1>
+        <div class="keyboard">
+            <!-- Accents aigus et graves -->
+            <div class="key-row">
+                <button class="key" data-char="É">É</button>
+                <button class="key" data-char="é">é</button>
+                <button class="key" data-char="À">À</button>
+                <button class="key" data-char="à">à</button>
+                <button class="key" data-char="È">È</button>
+                <button class="key" data-char="è">è</button>
+            </div>
+            <!-- Voyelles avec accents graves et circonflexes -->
+            <div class="key-row">
+                <button class="key" data-char="Ê">Ê</button>
+                <button class="key" data-char="ê">ê</button>
+                <button class="key" data-char="Â">Â</button>
+                <button class="key" data-char="â">â</button>
+                <button class="key" data-char="Î">Î</button>
+                <button class="key" data-char="î">î</button>
+            </div>
+            <!-- Voyelles avec accents circonflexes et tréma -->
+            <div class="key-row">
+                <button class="key" data-char="Ô">Ô</button>
+                <button class="key" data-char="ô">ô</button>
+                <button class="key" data-char="Û">Û</button>
+                <button class="key" data-char="û">û</button>
+                <button class="key" data-char="Ù">Ù</button>
+                <button class="key" data-char="ù">ù</button>
+            </div>
+            <!-- Tréma et cédille -->
+            <div class="key-row">
+                <button class="key" data-char="Ë">Ë</button>
+                <button class="key" data-char="ë">ë</button>
+                <button class="key" data-char="Ï">Ï</button>
+                <button class="key" data-char="ï">ï</button>
+                <button class="key" data-char="Ÿ">Ÿ</button>
+                <button class="key" data-char="ÿ">ÿ</button>
+            </div>
+            <!-- Cédille et ligatures -->
+            <div class="key-row">
+                <button class="key" data-char="Ç">Ç</button>
+                <button class="key" data-char="ç">ç</button>
+                <button class="key" data-char="Œ">Œ</button>
+                <button class="key" data-char="œ">œ</button>
+                <button class="key" data-char="Æ">Æ</button>
+                <button class="key" data-char="æ">æ</button>
+            </div>
+        </div>
+        <div id="notification" class="notification"></div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
