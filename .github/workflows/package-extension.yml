@@ -1,4 +1,4 @@
-name: Package Easy-Keys Extension
+name: Auto Package Easy-Keys Extension
 
 on:
   push:
@@ -12,46 +12,101 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Nécessaire pour comparer les commits
 
-      - name: Validate manifest.json
+      - name: Detect manifest changes
+        id: detect
         run: |
-          echo "🔍 Vérification du manifest.json..."
-          MANIFEST_PATH="manifest.json"
-
-          if [ ! -f "$MANIFEST_PATH" ]; then
-            echo "❌ Fichier manifest.json introuvable à : $MANIFEST_PATH"
-            exit 1
+          echo "🔍 Recherche de modifications dans les manifest.json..."
+          if git diff --name-only HEAD^ HEAD | grep -q "manifest.json"; then
+            echo "✅ Au moins un manifest.json a changé."
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ Aucun manifest.json n’a été modifié. Arrêt du workflow."
+            echo "changed=false" >> $GITHUB_OUTPUT
           fi
 
-          # Vérifie que c’est un JSON valide
-          jq empty "$MANIFEST_PATH" || (echo "❌ manifest.json invalide (erreur JSON)" && exit 1)
+      - name: Stop if no manifest changed
+        if: steps.detect.outputs.changed == 'false'
+        run: |
+          echo "🛑 Aucun changement détecté dans les manifest.json — pas de nouveau package."
+          exit 0
 
-          # Vérifie que les champs essentiels existent
-          for field in name version manifest_version; do
-            if ! jq -e ".$field" "$MANIFEST_PATH" > /dev/null; then
-              echo "❌ Champ manquant dans manifest.json : $field"
-              exit 1
-            fi
+      - name: Validate manifest.json files
+        run: |
+          echo "🔍 Validation des manifest.json..."
+          for MANIFEST_PATH in $(find . -type f -name "manifest.json"); do
+            echo "🧩 Vérification de : $MANIFEST_PATH"
+            jq empty "$MANIFEST_PATH" || (echo "❌ JSON invalide dans $MANIFEST_PATH" && exit 1)
+            for field in name version manifest_version; do
+              if ! jq -e ".$field" "$MANIFEST_PATH" > /dev/null; then
+                echo "❌ Champ manquant dans $MANIFEST_PATH : $field"
+                exit 1
+              fi
+            done
           done
+          echo "✅ Tous les manifest.json sont valides !"
 
-          echo "✅ manifest.json valide !"
+      - name: Extract version from main manifest.json
+        id: manifest
+        run: |
+          MAIN_MANIFEST="manifest.json"
+          VERSION=$(jq -r '.version' "$MAIN_MANIFEST")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 Version principale détectée : $VERSION"
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Check if version already released
+        id: version_check
+        run: |
+          VERSION=${{ steps.manifest.outputs.version }}
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "⚠️ La version v$VERSION existe déjà. Aucun nouveau packaging nécessaire."
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Nouvelle version détectée : v$VERSION"
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Stop if version already released
+        if: steps.version_check.outputs.skip == 'true'
+        run: |
+          echo "🛑 Fin du workflow : la version existe déjà."
+          exit 0
+
+      - name: Create or update tag
+        run: |
+          VERSION=${{ steps.manifest.outputs.version }}
+          git tag -f "v$VERSION"
+          git push origin "v$VERSION" --force
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create build directory
         run: mkdir -p dist
 
       - name: Create ZIP package
         run: |
-          zip -r dist/Easy-Keys.zip ./*
+          zip -r dist/Easy-Keys_v${{ steps.manifest.outputs.version }}.zip . -x ".git/*" ".github/*" "dist/*"
 
       - name: Upload packaged extension as artifact
         uses: actions/upload-artifact@v4
         with:
           name: easy-keys-package
-          path: dist/Easy-Keys.zip
+          path: dist/Easy-Keys_v${{ steps.manifest.outputs.version }}.zip
 
-      - name: Create GitHub Release
+      - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/Easy-Keys.zip
+          tag_name: v${{ steps.manifest.outputs.version }}
+          name: "Easy-Keys v${{ steps.manifest.outputs.version }}"
+          files: dist/Easy-Keys_v${{ steps.manifest.outputs.version }}.zip
+          make_latest: true
+          overwrite_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
