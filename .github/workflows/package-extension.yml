@@ -49,8 +49,7 @@ jobs:
           name: easy-keys-package
           path: dist/Easy-Keys.zip
 
-      - name: Create GitHub Release (optional)
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: dist/Easy-Keys.zip
