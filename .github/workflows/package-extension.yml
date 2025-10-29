@@ -41,7 +41,6 @@ jobs:
 
       - name: Create ZIP package
         run: |
-          cd Easy-Keys
           zip -r ../dist/Easy-Keys.zip ./*
 
       - name: Upload packaged extension as artifact
