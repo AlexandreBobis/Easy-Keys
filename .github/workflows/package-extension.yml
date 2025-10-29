@@ -2,9 +2,8 @@ name: Package Easy-Keys Extension
 
 on:
   push:
-    tags:
-      - 'v*'   # Ex: v1.0.0
-  workflow_dispatch:  # Permet un lancement manuel
+    branches:
+      - master
 
 jobs:
   package:
@@ -17,7 +16,7 @@ jobs:
       - name: Validate manifest.json
         run: |
           echo "🔍 Vérification du manifest.json..."
-          MANIFEST_PATH="Easy-Keys/manifest.json"
+          MANIFEST_PATH="manifest.json"
 
           if [ ! -f "$MANIFEST_PATH" ]; then
             echo "❌ Fichier manifest.json introuvable à : $MANIFEST_PATH"
