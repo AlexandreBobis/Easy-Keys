@@ -62,5 +62,5 @@ Voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
 ## Contribution
 
-Si vous avez des idées de nouvelles fonctionnalités ou des bugs à remonter, n'hésitez pas à poser une pull request ou une issue
+Si vous avez des idées de nouvelles fonctionnalités ou des bugs à remonter, n'hésitez pas à poser une pull request ou une issue.
 Vous pouvez également laisser une étoile pour me supporter !
