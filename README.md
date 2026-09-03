@@ -8,7 +8,7 @@ Vous aussi vous avez du mal à trouver 'É' ? Moi aussi. Je voulais quelque chos
 
 ## Description
 
-Easy-Keys est une extension de navigateur qui affiche un clavier virtuel avec tous les caractères accentués français. En un clic, vous pouvez copier n'importe quel caractère dans votre presse-papiers pour le coller où vous le souhaitez.
+Easy-Keys est une extension de navigateur qui affiche un popup avec tous les caractères accentués français. En un clic, vous pouvez copier n'importe quel caractère dans votre presse-papiers pour le coller où vous le souhaitez.
 Installez l'extension, cliquez sur l'icône de celle-ci et manipulez des dizaines de caractères à accent !
 
 ## Caractères disponibles
@@ -43,7 +43,7 @@ Installez l'extension, cliquez sur l'icône de celle-ci et manipulez des dizaine
 ## Utilisation
 
 1. Cliquez sur l'icône de l'extension dans la barre d'outils de votre navigateur
-2. Un petit clavier avec des caractères accentués apparaîtra
+2. Un petit popup avec des caractères accentués apparaîtra
 3. Cliquez sur le caractère souhaité
 4. Le caractère est automatiquement copié dans votre presse-papiers
 5. Collez-le où vous le souhaitez avec Ctrl+V (ou Cmd+V sur Mac)
